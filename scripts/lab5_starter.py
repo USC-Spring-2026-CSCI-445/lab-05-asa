@@ -117,7 +117,6 @@ class GoalPositionController:
 
         # define PID controllers for linear and angular velocities
         ######### Your code starts here #########
-        self.base_value = 0.1
         self.p_rot = PIDController(1, 1, 1, 0, -1, 1)
 
         ######### Your code ends here #########
@@ -169,7 +168,7 @@ class GoalPositionController:
                 ctrl_msg.linear.x = 0
                 ctrl_msg.linear.y = 0
             else:
-                ctrl_msg.linear.x = self.base_value
+                ctrl_msg.linear.x = 0.1
             if abs(angle_error) < 0.05:
                 ctrl_msg.angular.z = 0
             else:
