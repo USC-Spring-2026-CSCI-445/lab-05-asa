@@ -176,6 +176,8 @@ class GoalPositionController:
             else:
                 ctrl_msg.angular.z = self.p_rot.control(angle_error, t)
 
+            self.vel_pub.publish(ctrl_msg)
+
 
             ######### Your code ends here #########
 
@@ -243,6 +245,9 @@ class GoalAngleController:
                 ctrl_msg.angular.z = 0
             else:
                 ctrl_msg.angular.z = self.p_rot.control(angle_error, t)
+
+            self.vel_pub.publish(ctrl_msg)
+
 
             ######### Your code ends here #########
 
