@@ -168,13 +168,14 @@ class GoalPositionController:
                 ctrl_msg.linear.x = 0.0
                 ctrl_msg.angular.z = 0.0
             else:
-                ctrl_msg.linear.x = 0.2
+                ctrl_msg.linear.x = 0.02
     
             if abs(angle_error) > 0.5:
                 # ctrl_msg.linear.x = 0.0
                 ctrl_msg.angular.z = self.p_rot.control(angle_error, t)
             else:
                 # ctrl_msg.linear.x = 0.2 * distance_error
+                ctrl_msg.linear.x = 0.0
                 ctrl_msg.angular.z = 0
     
             self.vel_pub.publish(ctrl_msg)
