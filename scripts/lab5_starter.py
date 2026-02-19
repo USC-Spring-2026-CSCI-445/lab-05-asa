@@ -43,8 +43,7 @@ class PIDController:
         derivative = de / dt
         self.integral += err * dt
 
-        # PID output
-        value = (self.kP * err) + (self.kD * (err - self.err_prev)) / dt + self.kS + self.kI * self.integral
+        value = self.kP * err + self.kI * self.integral + self.kD * derivative + self.kS
         
         if value < self.u_min:
             value = self.u_min
@@ -119,7 +118,7 @@ class GoalPositionController:
         # define PID controllers for linear and angular velocities
         ######### Your code starts here #########
         self.base_value = 0.1
-        self.p_rot = PDController(1, 1, 1, -1, 1)
+        self.p_rot = PIDController(1, 1, 1, 0, -1, 1)
 
         ######### Your code ends here #########
 
@@ -200,7 +199,7 @@ class GoalAngleController:
 
         # define PID controller angular velocity
         ######### Your code starts here #########
-        self.p_rot = PIDController(1, 1, 1, 0, -1, 1)
+        self.p_rot = PDController(1, 1, 1, -1, 1)
 
         ######### Your code ends here #########
 
