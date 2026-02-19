@@ -29,6 +29,7 @@ class PIDController:
         self.u_max = u_max
         self.t_prev = 0.0
         self.err_prev = 0.0
+        self.integral = 0.0
         ######### Your code ends here #########
 
     def control(self, err, t):
@@ -40,10 +41,10 @@ class PIDController:
 
         de = err - self.err_prev
         derivative = de / dt
-        integral += err * dt
+        self.integral += err * dt
 
         # PID output
-        value = (self.kP * err) + (self.kD * (err - self.err_prev)) / dt + self.kS + self.KI * integral
+        value = (self.kP * err) + (self.kD * (err - self.err_prev)) / dt + self.kS + self.kI * self.integral
         
         if value < self.u_min:
             value = self.u_min
@@ -136,7 +137,7 @@ class GoalPositionController:
 
         # Calculate error in position and orientation
         ######### Your code starts here #########
-        distance_err = math.sqrt(self.goal_position["x"] + self.goal_position["y"]**2) - math.sqrt(self.current_position["x"]**2 + self.goal_position["y"]**2)
+        distance_error = math.sqrt(self.goal_position["x"] + self.goal_position["y"]**2) - math.sqrt(self.current_position["x"]**2 + self.goal_position["y"]**2)
         dx = self.goal_position["x"] - self.current_position["x"]
         dy = self.goal_position["y"] - self.current_position["y"]
         theta_desired = math.atan2(dy, dx)
@@ -165,15 +166,15 @@ class GoalPositionController:
             # Calculate control commands using linear and angular PID controllers and stop if close enough to goal
             ######### Your code starts here #########
             t = rospy.get_time()
-            if abs(distance_err) < 0.05:
+            if abs(distance_error) < 0.05:
                 ctrl_msg.linear.x = 0
                 ctrl_msg.linear.y = 0
             else:
                 ctrl_msg.linear.x = self.base_value
             if abs(angle_error) < 0.05:
-                ctrl_msg.anglular.z = 0
+                ctrl_msg.angular.z = 0
             else:
-                ctrl_msg.anglular.z = self.p_rot.control(angle_error, t)
+                ctrl_msg.angular.z = self.p_rot.control(angle_error, t)
 
 
             ######### Your code ends here #########
@@ -237,10 +238,11 @@ class GoalAngleController:
 
             # Calculate control commands using angular PID controller and stop if close enough to goal
             ######### Your code starts here #########
-            if abs(angle_error < 0.05):
+            t = rospy.get_time()
+            if abs(angle_error)  < 0.05:
                 ctrl_msg.angular.z = 0
             else:
-                ctrl_msg.anglular.z = self.p_rot.control(angle_error, t)
+                ctrl_msg.angular.z = self.p_rot.control(angle_error, t)
 
             ######### Your code ends here #########
 
