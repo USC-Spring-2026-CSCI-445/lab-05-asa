@@ -43,7 +43,7 @@ class PIDController:
         integral += err * dt
 
         # PID output
-        value = (self.kP * err) + (self.kI * integral) + (self.kD * derivative)
+        value = (self.kP * err) + (self.kD * (err - self.err_prev)) / dt + self.kS + self.KI * integral
         
         if value < self.u_min:
             value = self.u_min
