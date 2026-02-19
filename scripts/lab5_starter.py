@@ -117,6 +117,8 @@ class GoalPositionController:
 
         # define PID controllers for linear and angular velocities
         ######### Your code starts here #########
+        self.base_value = 0.1
+        self.p_rot = PDController(1, 1, 1, -1, 1)
 
         ######### Your code ends here #########
 
@@ -134,6 +136,11 @@ class GoalPositionController:
 
         # Calculate error in position and orientation
         ######### Your code starts here #########
+        distance_err = math.sqrt(self.goal_position["x"] + self.goal_position["y"]**2) - math.sqrt(self.current_position["x"]**2 + self.goal_position["y"]**2)
+        dx = self.goal_position["x"] - self.current_position["x"]
+        dy = self.goal_position["y"] - self.current_position["y"]
+        theta_desired = math.atan2(dy, dx)
+        angle_error = theta_desired - self.current_position["theta"]
 
         ######### Your code ends here #########
 
@@ -157,6 +164,16 @@ class GoalPositionController:
 
             # Calculate control commands using linear and angular PID controllers and stop if close enough to goal
             ######### Your code starts here #########
+            t = rospy.get_time()
+            if abs(distance_err) < 0.05:
+                ctrl_msg.linear.x = 0
+                ctrl_msg.linear.y = 0
+            else:
+                ctrl_msg.linear.x = self.base_value
+            if abs(angle_error) < 0.05:
+                ctrl_msg.anglular.z = 0
+            else:
+                ctrl_msg.anglular.z = self.p_rot.control(angle_error, t)
 
 
             ######### Your code ends here #########
@@ -180,6 +197,7 @@ class GoalAngleController:
 
         # define PID controller angular velocity
         ######### Your code starts here #########
+        self.p_rot = PIDController(1, 1, 1, 0, -1, 1)
 
         ######### Your code ends here #########
 
@@ -197,6 +215,7 @@ class GoalAngleController:
 
         # Calculate error in orientation
         ######### Your code starts here #########
+        angle_error = self.goal_angle - self.current_position["theta"]
 
         ######### Your code ends here #########
 
@@ -218,6 +237,10 @@ class GoalAngleController:
 
             # Calculate control commands using angular PID controller and stop if close enough to goal
             ######### Your code starts here #########
+            if abs(angle_error < 0.05):
+                ctrl_msg.angular.z = 0
+            else:
+                ctrl_msg.anglular.z = self.p_rot.control(angle_error, t)
 
             ######### Your code ends here #########
 
