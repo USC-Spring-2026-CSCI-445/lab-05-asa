@@ -199,7 +199,7 @@ class GoalAngleController:
 
         # define PID controller angular velocity
         ######### Your code starts here #########
-        self.p_rot = PDController(1, 1, 1, -1, 1)
+        self.p_rot = PIDController(1, 1, 1, 0, -1, 1)
 
         ######### Your code ends here #########
 
