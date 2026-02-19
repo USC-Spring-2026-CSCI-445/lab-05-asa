@@ -164,12 +164,12 @@ class GoalPositionController:
             # Calculate control commands using linear and angular PID controllers and stop if close enough to goal
             ######### Your code starts here #########
             t = rospy.get_time()
-            if abs(distance_error) < 0.20:
+            if abs(distance_error) < 0.05:
                 ctrl_msg.linear.x = 0
                 ctrl_msg.linear.y = 0
             else:
                 ctrl_msg.linear.x = 0.1
-            if abs(angle_error) < 0.20:
+            if abs(angle_error) < 0.05:
                 ctrl_msg.angular.z = 0
             else:
                 ctrl_msg.angular.z = self.p_rot.control(angle_error, t)
