@@ -169,7 +169,7 @@ class GoalPositionController:
                 ctrl_msg.linear.y = 0
             else:
                 ctrl_msg.linear.x = 0.1
-            if abs(angle_error) < 0.05:
+            if abs(angle_error) < 0.5:
                 ctrl_msg.angular.z = 0
             else:
                 ctrl_msg.angular.z = self.p_rot.control(angle_error, t)
