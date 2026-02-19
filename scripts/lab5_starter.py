@@ -21,13 +21,39 @@ class PIDController:
         assert u_min < u_max, "u_min should be less than u_max"
         # Initialize PID variables here
         ######### Your code starts here #########
-
+        self.kP = kP
+        self.kI = kI
+        self.kD = kD
+        self.kS = kS
+        self.u_min = u_min
+        self.u_max = u_max
+        self.t_prev = 0.0
+        self.err_prev = 0.0
         ######### Your code ends here #########
 
     def control(self, err, t):
         # computer PID control action here
         ######### Your code starts here #########
+        dt = t - self.t_prev
+        if dt <= 1e-6:
+            return 0
 
+        de = err - self.err_prev
+        derivative = de / dt
+        integral += err * dt
+
+        # PID output
+        value = (self.kP * err) + (self.kI * integral) + (self.kD * derivative)
+        
+        if value < self.u_min:
+            value = self.u_min
+        elif value > self.u_max:
+            value = self.u_max
+
+        self.t_prev = t
+        self.err_prev = err
+
+        return value
         ######### Your code ends here #########
 
 
@@ -44,6 +70,7 @@ class PDController:
         ######### Your code starts here #########
         self.kP = kP
         self.kD = kD
+        self.kS = kS
         self.u_min = u_min
         self.u_max = u_max
         self.t_prev = 0.0
