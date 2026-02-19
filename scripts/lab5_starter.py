@@ -152,34 +152,33 @@ class GoalPositionController:
         return distance_error, angle_error
 
     def control_robot(self):
-        rate = rospy.Rate(10)  # 10 Hz
+        rate = rospy.Rate(10)
         ctrl_msg = Twist()
+    
         while not rospy.is_shutdown():
             error = self.calculate_error()
-
             if error is None:
+                rate.sleep()
                 continue
+    
             distance_error, angle_error = error
-
-            # Calculate control commands using linear and angular PID controllers and stop if close enough to goal
-            ######### Your code starts here #########
             t = rospy.get_time()
-            if abs(distance_error) < 0.05:
-                ctrl_msg.linear.x = 0
-                ctrl_msg.linear.y = 0
+    
+            if distance_error < 0.05:
+                ctrl_msg.linear.x = 0.0
+                ctrl_msg.angular.z = 0.0
+    
             else:
-                ctrl_msg.linear.x = 0.1
-            if abs(angle_error) < 0.05:
-                ctrl_msg.angular.z = 0
-            else:
-                ctrl_msg.angular.z = self.p_rot.control(angle_error, t)
-
+                if abs(angle_error) > 0.2:
+                    ctrl_msg.linear.x = 0.0
+                    ctrl_msg.angular.z = self.p_rot.control(angle_error, t)
+                else:
+                    ctrl_msg.linear.x = 0.2 * distance_error
+                    ctrl_msg.angular.z = self.p_rot.control(angle_error, t)
+    
             self.vel_pub.publish(ctrl_msg)
-
-
-            ######### Your code ends here #########
-
             rate.sleep()
+
 
 
 # Class for controlling the robot to reach a goal position
