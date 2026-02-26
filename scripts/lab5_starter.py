@@ -117,7 +117,8 @@ class GoalPositionController:
 
         # define PID controllers for linear and angular velocities
         ######### Your code starts here #########
-        self.p_rot = PIDController(2.0, 0.03, 0.01, 0.0, -1.5, 1.5)
+        # self.p_rot = PIDController(2.0, 0.03, 0.01, 0.0, -1.5, 1.5)
+        self.p_rot = PDController(2.0, 0.03, 0.01, -1, 1)
 
         ######### Your code ends here #########
 
@@ -199,7 +200,8 @@ class GoalAngleController:
 
         # define PID controller angular velocity
         ######### Your code starts here #########
-        self.p_rot = PIDController(2.0, 0.03, 0.01, 0.0, -1, 1)
+        # self.p_rot = PIDController(2.0, 0.03, 0.01, 0.0, -1, 1)
+        self.p_rot = PDController(2.0, 0.03, 0.01, -1, 1)
 
         ######### Your code ends here #########
 
