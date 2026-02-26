@@ -146,9 +146,9 @@ class GoalPositionController:
 
         # Ensure angle error is within -pi to pi range
         if angle_error > math.pi:
-            angle_error -= 2 * math.pi
+            angle_error = math.pi
         elif angle_error < -math.pi:
-            angle_error += 2 * math.pi
+            angle_error = -1 * math.pi
 
         return distance_error, angle_error
 
@@ -225,9 +225,9 @@ class GoalAngleController:
 
         # Ensure angle error is within -pi to pi range
         if angle_error > math.pi:
-            angle_error -= 2 * math.pi
+            angle_error = math.pi
         elif angle_error < -math.pi:
-            angle_error += 2 * math.pi
+            angle_error = -1 * math.pi
         return angle_error
 
     def control_robot(self):
