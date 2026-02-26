@@ -43,7 +43,7 @@ class PIDController:
         derivative = de / dt
         self.integral += err * dt
 
-        value = self.kP * err + self.kI * self.integral + self.kD * derivative + self.kS
+        value = self.kP * err + self.kI * self.integral + self.kD * derivative + self.kS * (1 if err > 0 else -1 if err < 0 else 0)
         
         if value < self.u_min:
             value = self.u_min
